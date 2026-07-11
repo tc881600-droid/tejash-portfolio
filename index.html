@@ -1,0 +1,1828 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+
+    <title>Tejash — AI Engineer & Software Developer</title>
+    <meta
+      name="description"
+      content="Portfolio of Tejash — AI Engineer and Creative Technologist."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      /* ==================== CERTIFICATE VIEWER MODAL ==================== */
+      .cert-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .cert-modal.active {
+        display: flex;
+      }
+      .cert-modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(20px);
+        cursor: pointer;
+      }
+      .cert-modal-content {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        height: 85vh;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+        animation: certModalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 2;
+      }
+      @keyframes certModalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.92) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .cert-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .cert-modal-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 14px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--text);
+      }
+      .cert-modal-close {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .cert-modal-close:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: rotate(90deg);
+      }
+      .cert-modal-body {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+        background: #0a0a0a;
+      }
+      .cert-modal-body iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+        position: relative;
+        z-index: 1;
+        background: transparent;
+      }
+      .cert-modal-body::before {
+        content: "Loading certificate...";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+        z-index: 0;
+        pointer-events: none;
+      }
+      @media (max-width: 768px) {
+        .cert-modal {
+          padding: 0;
+        }
+        .cert-modal-content {
+          height: 100vh;
+          max-width: 100%;
+          border-radius: 0;
+          border: none;
+        }
+        .cert-modal-header {
+          padding: 1rem;
+        }
+      }
+      .view-certificate-btn {
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+      }
+      .exp-item-cert .view-certificate-btn,
+      .exp-item[data-type="certificate"] .view-certificate-btn {
+        color: #a8b8d8;
+        border-color: rgba(168, 184, 216, 0.35);
+        background: rgba(168, 184, 216, 0.05);
+      }
+      .exp-item-cert .view-certificate-btn:hover,
+      .exp-item[data-type="certificate"] .view-certificate-btn:hover {
+        background: #a8b8d8;
+        color: var(--bg);
+        border-color: #a8b8d8;
+      }
+    </style>
+
+    <style>
+      /* Experience Section Fixes */
+      #experience .container {
+        align-items: center;
+      }
+      #experience .section-header {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+      #experience .section-header h2 {
+        margin: 0;
+        line-height: 1;
+      }
+      #experience .section-header .counter {
+        margin-bottom: 0.25rem;
+      }
+      .exp-intro {
+        margin-top: 0.5rem;
+        margin-bottom: 2.5rem;
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+      .exp-filters {
+        margin-bottom: 3rem;
+        margin-top: 0.5rem;
+      }
+      .exp-filter {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .exp-filter:hover {
+        transform: translateY(-2px);
+      }
+      .exp-filter.active {
+        box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+      }
+    </style>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+
+    <base target="_blank" />
+    <base target="_blank" />
+    <base target="_blank" />
+  </head>
+
+  <body>
+    <div id="liquid-ether-bg"></div>
+    <div class="grain"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-label" id="cursor-label">View</div>
+
+    <div id="fps-hud">60 FPS · 16ms</div>
+
+    <nav id="main-nav">
+      <div class="logo">Tejash.</div>
+      <div class="links">
+        <a href="#profile" class="nav-link" data-nav="internal">Profile</a>
+        <a href="#experience" class="nav-link" data-nav="internal"
+          >Experience</a
+        >
+        <a href="#projects" class="nav-link" data-nav="internal">Projects</a>
+        <a href="#mood-swinger" class="nav-link" data-nav="internal">Mood</a>
+        <a href="#contact" class="nav-link" data-nav="internal">Contact</a>
+      </div>
+    </nav>
+
+    <section id="hero">
+      <div class="bg-text" aria-hidden="true">Tejash</div>
+      <div class="container hero-content">
+        <p class="label" style="margin-bottom: 2rem; overflow: hidden">
+          <span class="hero-label">AI Engineer & Systems Architect</span>
+        </p>
+        <h1 class="display">
+          <span class="line"><span class="line-inner">Building</span></span>
+          <span class="line"><span class="line-inner">Intelligent</span></span>
+          <span class="line"><span class="line-inner">Systems.</span></span>
+        </h1>
+        <div class="role">
+          <span class="scramble" id="scramble">AI Engineer</span>
+        </div>
+        <div class="meta">
+          <div class="meta-item">
+            <p class="label">Location</p>
+            <p>India, Earth</p>
+          </div>
+          <div class="meta-item">
+            <p class="label">Focus</p>
+            <p>Html-Css / Software dev / Cloud / Ui-Ux</p>
+          </div>
+          <div class="meta-item">
+            <p class="label">Local Time</p>
+            <p class="time-display" id="local-time">--:--</p>
+          </div>
+          <div class="meta-item">
+            <p class="label">Status</p>
+            <p style="color: #4ade80">● Open to work</p>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-ind">
+        <span>Scroll</span>
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <div class="line-divider" id="line1"></div>
+
+    <section id="profile">
+      <div class="container">
+        <div class="grid">
+          <div class="portrait" id="parallax-portrait">
+            <div class="id-card-3d-wrapper" id="id-card-3d-wrapper">
+              <div class="id-card-3d" id="id-card-3d">
+                <div class="id-lanyard">
+                  <div class="lanyard-strap"></div>
+                  <div class="lanyard-clip">
+                    <div class="clip-ring"></div>
+                    <div class="clip-body"></div>
+                  </div>
+                </div>
+                <div class="id-card-body">
+                  <div class="id-card-shine"></div>
+                  <div class="id-card-header">
+                    <div class="id-org">PORTFOLIO ACCESS</div>
+                    <div class="id-chip">
+                      <div class="chip-line"></div>
+                      <div class="chip-line"></div>
+                      <div class="chip-line"></div>
+                    </div>
+                  </div>
+                  <div class="id-photo-wrapper">
+                    <div class="id-photo" style="border: none">
+                      <img
+                        src="./profile.jpg"
+                        alt="Chauhan Tejash D"
+                        onerror="
+                          this.style.display = 'none';
+                          this.parentElement.style.background =
+                            'linear-gradient(135deg,#1a1a1a,#0a0a0a)';
+                          this.parentElement.innerHTML +=
+                            '<div style=display:flex;align-items:center;justify-content:center;height:100%;color:#444;font-family:Space Grotesk,sans-serif;font-size:28px;font-weight:600;>TC</div>';
+                        "
+                      />
+                    </div>
+                  </div>
+                  <div class="id-info">
+                    <div class="id-name">Chauhan Tejash D</div>
+                    <div class="id-role">AI Engineer</div>
+                    <div class="id-divider"></div>
+                    <div class="id-details">
+                      <div class="id-detail">
+                        <span class="id-label">DOB</span>
+                        <span class="id-value">18/02/2006</span>
+                      </div>
+                      <div class="id-detail">
+                        <span class="id-label">Email</span>
+                        <span class="id-value">contact@tejash.dev</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="id-barcode">
+                    <div class="barcode-line" style="width: 2px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                    <div class="barcode-line" style="width: 3px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                    <div class="barcode-line" style="width: 4px"></div>
+                    <div class="barcode-line" style="width: 2px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                    <div class="barcode-line" style="width: 3px"></div>
+                    <div class="barcode-line" style="width: 2px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                    <div class="barcode-line" style="width: 4px"></div>
+                    <div class="barcode-line" style="width: 2px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                    <div class="barcode-line" style="width: 3px"></div>
+                    <div class="barcode-line" style="width: 2px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                    <div class="barcode-line" style="width: 4px"></div>
+                    <div class="barcode-line" style="width: 2px"></div>
+                    <div class="barcode-line" style="width: 3px"></div>
+                    <div class="barcode-line" style="width: 1px"></div>
+                  </div>
+                  <div class="id-number">ID: TEJ-2006-0218</div>
+                </div>
+                <div class="id-card-shadow"></div>
+              </div>
+            </div>
+            <div class="caption">
+              <p class="mono">Est. 2021</p>
+            </div>
+          </div>
+          <div class="bio">
+            <h2 class="display profile-heading">
+              I architect neural systems and scale them to millions.
+            </h2>
+            <p class="profile-text">
+              Currently focused on the intersection of generative AI and
+              production infrastructure. I build models that understand, systems
+              that scale, and interfaces that feel invisible.
+            </p>
+            <p class="profile-text">
+              From training transformer pipelines on custom silicon to shipping
+              full-stack products used by real humans — I operate across the
+              entire stack with an obsession for craft.
+            </p>
+            <div class="stats">
+              <div class="stat">
+                <div class="num" data-count="50">4</div>
+                <div class="label">Shipped Projects</div>
+              </div>
+              <div class="stat">
+                <div class="num" data-count="25">8</div>
+                <div class="label">Certifications</div>
+              </div>
+              <div class="stat">
+                <div class="num" data-count="15">2</div>
+                <div class="label">Hackathons</div>
+              </div>
+            </div>
+            <div class="skill-cloud">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">PyTorch</span>
+              <span class="skill-tag">TensorFlow</span>
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Next.js</span>
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">AWS</span>
+              <span class="skill-tag">Kubernetes</span>
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">GraphQL</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">OpenCV</span>
+              <span class="skill-tag">LLMs</span>
+              <span class="skill-tag">CUDA</span>
+              <span class="skill-tag">FastAPI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="line-divider" id="line2"></div>
+
+    <!-- Experience — Cinematic Timeline -->
+
+    <section id="experience">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="display">02 — Experience</h2>
+          <div class="counter">
+            <span id="exp-counter">01</span> /
+            <span id="exp-total">06</span>
+          </div>
+        </div>
+
+        <p class="exp-intro">
+          A timeline of hands-on training, hackathons, and certifications that
+          shaped my journey.
+        </p>
+
+        <div class="exp-filters" id="exp-filters">
+          <button class="exp-filter active" data-filter="all">All</button>
+          <button class="exp-filter" data-filter="ojt">OJT</button>
+          <button class="exp-filter" data-filter="hackathon">Hackathon</button>
+          <button class="exp-filter" data-filter="event">Event</button>
+        </div>
+
+        <div class="exp-timeline" id="exp-timeline">
+          <div class="timeline-track">
+            <div class="timeline-progress"></div>
+          </div>
+
+          <!-- 1 -->
+          <article class="exp-item exp-item-feature" data-type="ojt">
+            <div class="timeline-year-bg" aria-hidden="true">2026</div>
+            <div class="timeline-node"><div class="node-ring"></div></div>
+            <div class="timeline-connector"></div>
+            <div class="exp-card">
+              <div class="exp-card-top">
+                <span class="exp-type">OJT</span>
+                <span class="exp-year-badge">2026</span
+                ><span class="exp-date">April 2026</span>
+              </div>
+              <h3 class="exp-role">Master Trainer — Software Developer</h3>
+              <p class="exp-company">
+                Unistar Softech Pvt. Ltd &amp; RNGPIT, Bardoli
+              </p>
+              <p class="exp-desc">
+                Completed On-Job Training (ISD407) in Semester-4 of B.Voc.
+                Software Development. Built and delivered advanced web
+                development modules, mentoring peers on modern full-stack
+                practices.
+              </p>
+              <div class="exp-tags">
+                <span>Web Development</span>
+                <span>Training</span>
+                <span>Mentorship</span>
+                <span>Full Stack</span>
+              </div>
+              <button
+                class="exp-link view-certificate-btn"
+                onclick="openCertModal('1OtG5SkMmbEt0jU36FBCIeYNFDHT3pvfK')"
+                type="button"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                View Certificate
+              </button>
+            </div>
+          </article>
+
+          <!-- 2 -->
+          <article class="exp-item" data-type="hackathon">
+            <div class="timeline-year-bg" aria-hidden="true">2026</div>
+            <div class="timeline-node"><div class="node-ring"></div></div>
+            <div class="timeline-connector"></div>
+            <div class="exp-card">
+              <div class="exp-card-top">
+                <span class="exp-type">Hackathon</span>
+                <span class="exp-year-badge">2026</span
+                ><span class="exp-date">May 2026</span>
+              </div>
+              <h3 class="exp-role">Agentic AI Hackathon Participant</h3>
+              <p class="exp-company">JIT Borawan &amp; Microsoft</p>
+              <p class="exp-desc">
+                Competed in the Agentic AI Hackathon powered by Microsoft.
+                Developed a Mental Wellness Support Agent using agentic AI
+                frameworks, demonstrating innovation in AI-driven mental health
+                solutions.
+              </p>
+              <div class="exp-tags">
+                <span>Agentic AI</span>
+                <span>Microsoft</span>
+                <span>Mental Wellness</span>
+                <span>AI Agents</span>
+              </div>
+              <button
+                class="exp-link view-certificate-btn"
+                onclick="openCertModal('1WxG_fLvmsiu2Y862QK-0manBzJ8MAP5I')"
+                type="button"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                View Certificate
+              </button>
+            </div>
+          </article>
+
+          <!-- 3 -->
+          <article class="exp-item" data-type="ojt">
+            <div class="timeline-year-bg" aria-hidden="true">2025</div>
+            <div class="timeline-node"><div class="node-ring"></div></div>
+            <div class="timeline-connector"></div>
+            <div class="exp-card">
+              <div class="exp-card-top">
+                <span class="exp-type">OJT</span>
+                <span class="exp-year-badge">2025</span
+                ><span class="exp-date">Sept – Oct 2025</span>
+              </div>
+              <h3 class="exp-role">User Experience Designer</h3>
+              <p class="exp-company">MA UX/UI, Surat &amp; RNGPIT, Bardoli</p>
+              <p class="exp-desc">
+                Completed OJT (21130207) in Semester-3 of B.Voc. Software
+                Development. Designed complete UI/UX workflows using Figma, from
+                wireframes to high-fidelity prototypes for real-world
+                applications.
+              </p>
+              <div class="exp-tags">
+                <span>Figma</span>
+                <span>UI/UX</span>
+                <span>Prototyping</span>
+                <span>Design Systems</span>
+              </div>
+              <button
+                class="exp-link view-certificate-btn"
+                onclick="openCertModal('12lVpS2_0eVfcPFahoR823AZ7blBLZDe7')"
+                type="button"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                View Certificate
+              </button>
+            </div>
+          </article>
+
+          <!-- 4 -->
+          <article class="exp-item" data-type="ojt">
+            <div class="timeline-year-bg" aria-hidden="true">2025</div>
+            <div class="timeline-node"><div class="node-ring"></div></div>
+            <div class="timeline-connector"></div>
+            <div class="exp-card">
+              <div class="exp-card-top">
+                <span class="exp-type">OJT</span>
+                <span class="exp-year-badge">2025</span
+                ><span class="exp-date">March 2025</span>
+              </div>
+              <h3 class="exp-role">Web Developer</h3>
+              <p class="exp-company">
+                Unistar Softech Pvt. Ltd &amp; RNGPIT, Bardoli
+              </p>
+              <p class="exp-desc">
+                Completed OJT (ISD206) in Semester-2 of B.Voc. Software
+                Development. Built dynamic web applications using PHP, handling
+                server-side logic, database integration, and deployment
+                workflows.
+              </p>
+              <div class="exp-tags">
+                <span>PHP</span>
+                <span>MySQL</span>
+                <span>Backend</span>
+                <span>Web Development</span>
+              </div>
+              <button
+                class="exp-link view-certificate-btn"
+                onclick="openCertModal('1DlLy4iHwQ8dqnoReywWx2Apn0tgcJXoj')"
+                type="button"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                View Certificate
+              </button>
+            </div>
+          </article>
+
+          <!-- 5 -->
+          <article class="exp-item" data-type="ojt">
+            <div class="timeline-year-bg" aria-hidden="true">2024</div>
+            <div class="timeline-node"><div class="node-ring"></div></div>
+            <div class="timeline-connector"></div>
+            <div class="exp-card">
+              <div class="exp-card-top">
+                <span class="exp-type">OJT</span>
+                <span class="exp-year-badge">2024</span
+                ><span class="exp-date">October 2024</span>
+              </div>
+              <h3 class="exp-role">Database System Assistant</h3>
+              <p class="exp-company">
+                Unistar Softech Pvt. Ltd &amp; RNGPIT, Bardoli
+              </p>
+              <p class="exp-desc">
+                Completed OJT (ISD108) in Semester-2 of B.Voc. Software
+                Development. Managed database architecture, wrote complex SQL
+                queries, and optimized relational database performance for
+                production systems.
+              </p>
+              <div class="exp-tags">
+                <span>SQL</span>
+                <span>Database Design</span>
+                <span>DBMS</span>
+                <span>Optimization</span>
+              </div>
+              <button
+                class="exp-link view-certificate-btn"
+                onclick="openCertModal('1mM0qprwzAD8TrYk-oqa17ayvvE3JLJuw')"
+                type="button"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                View Certificate
+              </button>
+            </div>
+          </article>
+
+          <!-- 6 -->
+          <article class="exp-item" data-type="event">
+            <div class="timeline-year-bg" aria-hidden="true">2024</div>
+            <div class="timeline-node"><div class="node-ring"></div></div>
+            <div class="timeline-connector"></div>
+            <div class="exp-card">
+              <div class="exp-card-top">
+                <span class="exp-type">Event</span>
+                <span class="exp-year-badge">2024</span
+                ><span class="exp-date">Sept 2024</span>
+              </div>
+              <h3 class="exp-role">Visvesmruti 2024 Participant</h3>
+              <p class="exp-company">
+                R.N.G. Patel Institute of Technology (RNGPIT)
+              </p>
+              <p class="exp-desc">
+                Actively participated in Visvesmruti 2024, a 14th National Level
+                Technical Festival. Competed in the Tech Design event for B.Voc.
+                SD, showcasing creative problem-solving and technical design
+                skills.
+              </p>
+              <div class="exp-tags">
+                <span>Tech Design</span>
+                <span>National Level</span>
+                <span>Competition</span>
+                <span>Innovation</span>
+              </div>
+              <button
+                class="exp-link view-certificate-btn"
+                onclick="openCertModal('10X5-KOp5FEz8JI3M1_9DTW2xH27DfIhF')"
+                type="button"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                View Certificate
+              </button>
+            </div>
+          </article>
+
+          <!-- CERTIFICATE EXAMPLE 1 — Copy this block to add more certificates -->
+
+          <!-- CERTIFICATE EXAMPLE 2 — Copy this block to add more certificates -->
+
+          <!-- End -->
+          <div class="timeline-end" id="timeline-end">
+            <div class="end-line"></div>
+            <div class="end-text">Journey Continues</div>
+            <div class="end-subtext">More chapters being written</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="line-divider" id="line3"></div>
+    <section id="projects">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="display">03 — Projects</h2>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card" data-project="0">
+            <div class="project-image">
+              <img src="./mission-setu.png" alt="Mission Setu" />
+              <div class="project-overlay">
+                <a
+                  href="https://mission-setu-g4n5.vercel.app/"
+                  target="_blank"
+                  class="project-link"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  Live Site
+                </a>
+              </div>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Mission Setu</h3>
+              <p class="project-desc">
+                A mission-driven platform bridging gaps between communities and
+                resources. Built with modern web technologies for seamless user
+                experience and real-time collaboration.
+              </p>
+              <div class="project-tags">
+                <span>Next.js</span><span>React</span><span>Tailwind</span
+                ><span>Vercel</span>
+              </div>
+            </div>
+          </article>
+          <article class="project-card" data-project="1">
+            <div class="project-image">
+              <img src="./grass-is-life.png" alt="Grass Is Life" />
+              <div class="project-overlay">
+                <a
+                  href="https://grassislifemf.vercel.app/"
+                  target="_blank"
+                  class="project-link"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  Live Site
+                </a>
+              </div>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Grass Is Life</h3>
+              <p class="project-desc">
+                An environmental awareness platform promoting sustainable living
+                and green initiatives. Features interactive data visualizations
+                and community-driven content.
+              </p>
+              <div class="project-tags">
+                <span>React</span><span>Node.js</span><span>MongoDB</span
+                ><span>Chart.js</span>
+              </div>
+            </div>
+          </article>
+          <article class="project-card" data-project="2">
+            <div class="project-image">
+              <img src="./pocket-gpt.png" alt="Pocket GPT" />
+              <div class="project-overlay">
+                <a
+                  href="https://pocketgpt.vercel.app/"
+                  target="_blank"
+                  class="project-link"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  Live Site
+                </a>
+              </div>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Pocket GPT</h3>
+              <p class="project-desc">
+                A lightweight AI chat interface powered by GPT models. Features
+                streaming responses, conversation history, and a clean minimal
+                design for on-the-go AI assistance.
+              </p>
+              <div class="project-tags">
+                <span>Next.js</span><span>OpenAI</span><span>TypeScript</span
+                ><span>Vercel</span>
+              </div>
+            </div>
+          </article>
+          <article class="project-card" data-project="3">
+            <div class="project-image">
+              <img src="./ivory-cv.png" alt="Ivory CV Builder" />
+              <div class="project-overlay">
+                <a
+                  href="https://ivory-cv.vercel.app/"
+                  target="_blank"
+                  class="project-link"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  Live Site
+                </a>
+              </div>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Ivory CV Builder</h3>
+              <p class="project-desc">
+                A sleek, AI-powered resume builder that helps craft professional
+                CVs with real-time preview, customizable templates, and export
+                to PDF. Built for speed and elegance.
+              </p>
+              <div class="project-tags">
+                <span>Next.js</span><span>TypeScript</span><span>Tailwind</span
+                ><span>Vercel</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="line-divider" id="line4"></div>
+
+    <div class="line-divider" id="line5"></div>
+
+    <!-- Mood Swinger Section -->
+    <section id="mood-swinger">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="display">04 — Mood Swinger</h2>
+          <p class="mood-subtitle">
+            Visual Representaion of my condition after your review on this
+            Portfolio
+          </p>
+        </div>
+
+        <div class="mood-grid">
+          <!-- Video 1: meme1.mp4 -->
+          <div class="mood-tile" data-video="1">
+            <div class="mood-thumbnail" id="mood-thumb-1">
+              <!-- Thumbnail Image (shown before play) -->
+              <img
+                class="mood-thumb-img"
+                src="./thumb1.jpg"
+                alt="1st Condition"
+                id="thumb-img-1"
+              />
+              <!-- Play Button Overlay -->
+              <div class="mood-play-overlay" onclick="playMoodVideo(1)">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon
+                    points="10 8 16 12 10 16 10 8"
+                    fill="currentColor"
+                    stroke="none"
+                  ></polygon>
+                </svg>
+              </div>
+              <!-- Video (hidden until play) -->
+              <video
+                class="mood-video-embed"
+                id="mood-video-1"
+                controls
+                playsinline
+                preload="none"
+                poster="./thumb1.jpg"
+              >
+                <source src="./meme1.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="mood-info">
+              <h3 class="mood-title">1st Condition</h3>
+              <p class="mood-desc">
+                My condition if you like my Portfolio site.
+              </p>
+            </div>
+          </div>
+
+          <!-- Video 2: meme2.mp4 -->
+          <div class="mood-tile" data-video="2">
+            <div class="mood-thumbnail" id="mood-thumb-2">
+              <!-- Thumbnail Image (shown before play) -->
+              <img
+                class="mood-thumb-img"
+                src="./thumb2.jpg"
+                alt="2nd condition"
+                id="thumb-img-2"
+              />
+              <!-- Play Button Overlay -->
+              <div class="mood-play-overlay" onclick="playMoodVideo(2)">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon
+                    points="10 8 16 12 10 16 10 8"
+                    fill="currentColor"
+                    stroke="none"
+                  ></polygon>
+                </svg>
+              </div>
+              <!-- Video (hidden until play) -->
+              <video
+                class="mood-video-embed"
+                id="mood-video-2"
+                controls
+                playsinline
+                preload="none"
+                poster="./thumb2.jpg"
+              >
+                <source src="./meme2.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="mood-info">
+              <h3 class="mood-title">2nd Condition</h3>
+              <p class="mood-desc">
+                My condition if you dont like my Portfolio
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="line-divider" id="line6"></div>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-left">
+            <p class="contact-eyebrow label">Get in Touch</p>
+            <h2 class="display contact-headline">
+              <span class="contact-line">Let's Build</span>
+              <span class="contact-line">Something</span>
+              <span class="contact-line accent-gold">Extraordinary.</span>
+            </h2>
+            <p class="contact-desc">
+              Currently open to research collaborations, founding engineer
+              roles, and ambitious side projects. If you're working on something
+              that pushes boundaries — let's talk.
+            </p>
+
+            <div class="contact-status">
+              <span class="status-dot"></span>
+              <span class="status-text">Open to opportunities</span>
+            </div>
+          </div>
+
+          <div class="contact-right">
+            <form id="contact-form" class="contact-form-modern">
+              <input
+                type="hidden"
+                name="_subject"
+                value="New Portfolio Message"
+              />
+              <div class="form-field-modern">
+                <input
+                  type="text"
+                  id="cf-name"
+                  name="name"
+                  required
+                  placeholder=" "
+                  autocomplete="off"
+                  data-fs-field
+                />
+                <label for="cf-name" class="form-label-modern">Your Name</label>
+                <div class="form-line-modern"></div>
+                <div class="form-line-focus-modern"></div>
+              </div>
+              <div class="form-field-modern">
+                <input
+                  type="email"
+                  id="cf-email"
+                  name="email"
+                  required
+                  placeholder=" "
+                  autocomplete="off"
+                  data-fs-field
+                />
+                <label for="cf-email" class="form-label-modern"
+                  >Email Address</label
+                >
+                <div class="form-line-modern"></div>
+                <div class="form-line-focus-modern"></div>
+              </div>
+              <div class="form-field-modern">
+                <textarea
+                  id="cf-message"
+                  name="message"
+                  required
+                  placeholder=" "
+                  rows="4"
+                  autocomplete="off"
+                  data-fs-field
+                ></textarea>
+                <label for="cf-message" class="form-label-modern"
+                  >Tell me about your project</label
+                >
+                <div class="form-line-modern"></div>
+                <div class="form-line-focus-modern"></div>
+              </div>
+              <button
+                type="button"
+                class="submit-btn-modern"
+                id="submit-btn"
+                data-fs-submit-btn
+                onclick="return handleContactSubmit();"
+              >
+                <span class="btn-text">Send Message</span>
+                <span class="btn-loader">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                  </svg>
+                </span>
+                <span class="btn-success">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+              </button>
+            </form>
+
+            <div class="contact-success-modern" id="contact-success">
+              <div class="success-ring-modern">
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <h3 class="success-title-modern">Message Sent</h3>
+              <p class="success-desc-modern">
+                I'll get back to you within 24 hours.
+              </p>
+              <button class="success-reset-modern" onclick="resetForm()">
+                Send Another
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-left">
+        <div class="footer-copyright">© 2024 Tejash. All rights reserved.</div>
+      </div>
+      <div class="footer-center">
+        <div class="social-train" id="social-train">
+          <div class="train-track">
+            <div class="train-content">
+              <a
+                href="https://www.linkedin.com/in/tejash-chauhan-5a30bb35a"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="LinkedIn"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                    ></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle></svg
+                ></span>
+                <span class="train-name">LinkedIn</span>
+              </a>
+              <a
+                href="https://www.instagram.com/tejxash/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="Instagram"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect
+                      x="2"
+                      y="2"
+                      width="20"
+                      height="20"
+                      rx="5"
+                      ry="5"
+                    ></rect>
+                    <path
+                      d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                    ></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg
+                ></span>
+                <span class="train-name">Instagram</span>
+              </a>
+              <a
+                href="https://www.threads.com/@tejxash"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="Threads"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                    ></path>
+                    <path d="M8 12h8"></path>
+                    <path d="M12 8v8"></path></svg
+                ></span>
+                <span class="train-name">Threads</span>
+              </a>
+              <a
+                href="https://github.com/tc881600-droid"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="GitHub"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                    ></path></svg
+                ></span>
+                <span class="train-name">GitHub</span>
+              </a>
+              <a
+                href="https://x.com/tejash_tw"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="X"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+                    <path
+                      d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"
+                    ></path></svg
+                ></span>
+                <span class="train-name">X</span>
+              </a>
+              <!-- Duplicate for seamless loop -->
+              <a
+                href="https://www.linkedin.com/in/tejash-chauhan-5a30bb35a"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="LinkedIn"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                    ></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle></svg
+                ></span>
+                <span class="train-name">LinkedIn</span>
+              </a>
+              <a
+                href="https://www.instagram.com/tejxash/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="Instagram"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect
+                      x="2"
+                      y="2"
+                      width="20"
+                      height="20"
+                      rx="5"
+                      ry="5"
+                    ></rect>
+                    <path
+                      d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                    ></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg
+                ></span>
+                <span class="train-name">Instagram</span>
+              </a>
+              <a
+                href="https://www.threads.com/@tejxash"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="Threads"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                    ></path>
+                    <path d="M8 12h8"></path>
+                    <path d="M12 8v8"></path></svg
+                ></span>
+                <span class="train-name">Threads</span>
+              </a>
+              <a
+                href="https://github.com/tc881600-droid"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="GitHub"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                    ></path></svg
+                ></span>
+                <span class="train-name">GitHub</span>
+              </a>
+              <a
+                href="https://x.com/tejash_tw"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="train-link"
+                data-platform="X"
+              >
+                <span class="train-icon"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+                    <path
+                      d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"
+                    ></path></svg
+                ></span>
+                <span class="train-name">X</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div
+          class="backtop"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        >
+          Back to top ↑
+        </div>
+      </div>
+    </footer>
+
+    <div class="case-modal" id="case-modal">
+      <button class="modal-close" onclick="closeCaseStudy()">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div id="case-content"></div>
+    </div>
+
+    <div id="command-palette" onclick="closePalette(event)">
+      <div class="palette-box" onclick="event.stopPropagation()">
+        <input
+          type="text"
+          class="palette-input"
+          id="palette-input"
+          placeholder="Type a command or search..."
+          autocomplete="off"
+        />
+        <div class="palette-results" id="palette-results"></div>
+      </div>
+    </div>
+
+    <div id="custom-context">
+      <div class="ctx-item" onclick="ctxAction('reload')">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        Reload
+      </div>
+      <div class="ctx-item" onclick="ctxAction('palette')">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="4 17 10 11 4 5"></polyline>
+          <line x1="12" y1="19" x2="20" y2="19"></line>
+        </svg>
+        Command Palette
+      </div>
+      <div class="ctx-divider"></div>
+      <div class="ctx-item" onclick="ctxAction('contact')">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+          ></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        Contact Tejash
+      </div>
+      <div class="ctx-item" onclick="ctxAction('source')">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        View Source
+      </div>
+      <div class="ctx-divider"></div>
+      <div class="ctx-item" onclick="ctxAction('admin')">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Admin Terminal
+      </div>
+    </div>
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <div id="admin-terminal">
+      <div class="term-header">
+        <span>root@tejash-portfolio:~#</span>
+        <span class="term-close" onclick="closeAdmin()">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          CLOSE
+        </span>
+      </div>
+      <div class="term-body" id="term-body">
+        <div class="term-line">Tejash Portfolio System v2.0.0</div>
+        <div class="term-line">
+          Secure Shell Access — Unauthorized access prohibited
+        </div>
+        <div class="term-line"></div>
+        <div class="term-line">Available commands:</div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">help</span> — Show this
+          help message
+        </div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">login</span> — Authenticate
+          as administrator
+        </div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">projects</span> — List all
+          projects
+        </div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">certs</span> — List all
+          certificates
+        </div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">messages</span> — View
+          contact form submissions
+        </div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">clear</span> — Clear
+          terminal
+        </div>
+        <div class="term-line">
+          <span style="color: var(--terminal-amber)">exit</span> — Close
+          terminal
+        </div>
+        <div class="term-line"></div>
+        <div class="term-input-line">
+          <span class="term-prompt">root@portfolio:~$</span>
+          <input
+            type="text"
+            class="term-input"
+            id="term-input"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==================== CERTIFICATE VIEWER MODAL ====================
+      function openCertModal(fileId) {
+        const modal = document.getElementById("cert-modal");
+        const iframe = document.getElementById("cert-iframe");
+        if (!modal || !iframe) return;
+        iframe.src = "https://drive.google.com/file/d/" + fileId + "/preview";
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+      function closeCertModal() {
+        const modal = document.getElementById("cert-modal");
+        const iframe = document.getElementById("cert-iframe");
+        if (!modal) return;
+        modal.classList.remove("active");
+        if (iframe) iframe.src = "";
+        document.body.style.overflow = "";
+      }
+      // Close cert modal on Escape
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeCertModal();
+      });
+    </script>
+
+    <!-- CERTIFICATE VIEWER MODAL -->
+    <div class="cert-modal" id="cert-modal">
+      <div class="cert-modal-overlay" onclick="closeCertModal()"></div>
+      <div class="cert-modal-content">
+        <div class="cert-modal-header">
+          <span class="cert-modal-title">Certificate</span>
+          <button
+            class="cert-modal-close"
+            onclick="closeCertModal()"
+            aria-label="Close"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="cert-modal-body">
+          <iframe
+            id="cert-iframe"
+            src=""
+            frameborder="0"
+            allow="autoplay"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==================== EXPERIENCE FILTER NAVIGATION ====================
+      (function () {
+        const timeline = document.getElementById("exp-timeline");
+        const filters = document.querySelectorAll(".exp-filter");
+        const counterEl = document.getElementById("exp-counter");
+        const totalEl = document.getElementById("exp-total");
+
+        if (!timeline || filters.length === 0) return;
+
+        const items = Array.from(timeline.querySelectorAll(".exp-item"));
+
+        function updateCounter(visibleCount) {
+          const total =
+            visibleCount ||
+            items.filter((i) => !i.classList.contains("is-hidden")).length;
+          if (totalEl)
+            totalEl.textContent = String(Math.max(total, 1)).padStart(2, "0");
+          if (counterEl) counterEl.textContent = "01";
+        }
+
+        updateCounter(items.length);
+
+        filters.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            // Update active state
+            filters.forEach(function (b) {
+              b.classList.remove("active");
+            });
+            btn.classList.add("active");
+
+            const filter = btn.getAttribute("data-filter");
+            let visible = 0;
+
+            items.forEach(function (item) {
+              const type = item.getAttribute("data-type") || "";
+              const show = filter === "all" || type === filter;
+              item.classList.toggle("is-hidden", !show);
+              if (show) visible++;
+            });
+
+            updateCounter(visible);
+          });
+        });
+      })();
+    </script>
+
+    <script>
+      // Force nav links to scroll within same page
+      document
+        .querySelectorAll('#main-nav a[href^="#"]')
+        .forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var targetId = this.getAttribute("href");
+            var target = document.querySelector(targetId);
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+              if (history.replaceState)
+                history.replaceState(null, null, targetId);
+            }
+            return false;
+          });
+        });
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>
